@@ -1,13 +1,37 @@
+const Path = require('path')
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const Fs = require('fs');
 
 const paths = require('./paths')
 
+//https://github.com/wbkd/webpack-starter/issues/231
+// Starts an empty array that will hold all HtmlWebpackPlugin instances
+const pages = [];
+
+// Read the src dir
+const files = Fs.readdirSync(Path.resolve(__dirname, '../assets'));
+
+// Loop through entries in src dir
+files.forEach(function (file) {
+
+  // If the entry doesn't have the extension .html, skip it
+  if (!file.match(/\.html$/)) {
+    return;
+  }
+
+  // Creates a new HtmlWebpackPlugin instance for the current entry
+  pages.push(new HtmlWebpackPlugin({
+    filename: file,
+    template: paths.src + '/' + file, // template file
+  }));
+});
+
 module.exports = {
   // Where webpack looks to start building the bundle
-  entry: [paths.src + '/index.js'],
+  entry: [paths.src + '/js/index.js'],
 
   // Where webpack outputs the assets and bundles
   output: {
@@ -26,7 +50,7 @@ module.exports = {
       patterns: [
         {
           from: paths.srcImages, //prends toutes les images du dossiers images
-          to: 'assets',
+          to: 'assets/images',
           globOptions: {
             ignore: ['*.DS_Store'],
           },
@@ -40,23 +64,7 @@ module.exports = {
       jQuery: 'jquery',
       "window.jQuery":"jquery"
     }),
-
-    // Generates an HTML file from a template
-    // Generates deprecation warning: https://github.com/jantimon/html-webpack-plugin/issues/1501
-    new HtmlWebpackPlugin({
-      title: 'Webpack Boilerplate',
-      //favicon: paths.src + '/images/favicon.png',
-      template: paths.src + '/template.html', // template file
-      filename: 'index.html', // output file
-      minify: false,
-    }),
-    new HtmlWebpackPlugin({
-      title: 'Webpack About',
-      template: paths.src + '/about.html',
-      filename: 'about.html',
-      minify: false,
-    }),
-  ],
+  ].concat(pages),
 
   // Determine how modules within the project are treated
   module: {

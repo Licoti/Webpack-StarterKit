@@ -16,7 +16,7 @@ module.exports = merge(common, {
     compress: true,
     hot: true,
     port: 8080,
-    watchFiles: ['src/*.html'] //Permet de livereload les html
+    watchFiles: ['assets/*.html'] //Permet de livereload les html
   },
 
   module: {

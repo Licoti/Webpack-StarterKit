@@ -1,8 +1,8 @@
-# 📦 webpack Boilerplate
+# Site mediation (webpack)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+Minimum node version : 14.15
 
-Sensible webpack 5 boilerplate using Babel, PostCSS and Sass.
+nvm use 14.15
 
 ## Installation
 
